@@ -61,13 +61,20 @@ class StepDefinitions extends ScalaDsl with EN with Matchers {
     //// Write code here that turns the phrase above into concrete actions
     Logger.debug("Count controller")
   }
-  When("""^I visit the "([^"]*)" page$"""){ (arg0:String) =>
+  When("""^I visit the "([^"]*)" page$"""){ (pageName:String) =>
     //// Write code here that turns the phrase above into concrete actions
-    throw new PendingException()
+    var pageUrl = pageName match {
+      case "count" => controllers.routes.CountController.count.url
+      case _ => throw new RuntimeException(s"Unsupported page: $pageName")
+    }
   }
   Then("""^I should see count$"""){ () =>
     //// Write code here that turns the phrase above into concrete actions
-    throw new PendingException()
+    val element = browser.find("body")
+
+    withClue("test should be integer: ") {
+      element shouldNot be(empty)
+    }
   }
 
 }
